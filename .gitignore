@@ -1,5 +1,5 @@
 .vscode
-*.js
+app/*.js
 *.map
 typings/
 node_modules/
