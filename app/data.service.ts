@@ -7,14 +7,19 @@ export class HeroService {
     $GetHeroes(): Promise<Hero[]> {
         return new Promise<Hero[]>(heroes => setTimeout(heroes, 3000))
             .then(() => {
-                console.log('resolve heroes!')
+                console.log('HeroService::resolve heroes!')
                 return HEROES
             })
     }
 
     $GetHero(id: number): Promise<Hero> {
-        console.log(`selected hero -> ${id}`)
+        // console.log(`HeroService::selected hero -> ${id}`)
         return this.$GetHeroes()
-            .then(heroes => heroes.find(hero => hero.id === id))
+            .then(heroes => heroes.find(hero => {
+                // console.log(hero); console.log(id)
+                console.log(typeof(hero.id))
+                console.log(typeof(id))
+                return hero.id == id;
+            }))
     }
 }

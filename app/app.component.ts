@@ -32,7 +32,6 @@ export class DashboardComponent implements OnInit {
   }
 }
 
-
 @Component({
   selector: 'app-main',
   template: `
@@ -49,78 +48,17 @@ export class NavComponent {
 }
 
 @Component({
-  styles: [`
-  .selected {
-    background-color: #CFD8DC !important;
-    color: white;
-  }
-  .heroes {
-    margin: 0 0 2em 0;
-    list-style-type: none;
-    padding: 0;
-    width: 15em;
-  }
-  .heroes li {
-    cursor: pointer;
-    position: relative;
-    left: 0;
-    background-color: #EEE;
-    margin: .5em;
-    padding: .3em 0;
-    height: 1.6em;
-    border-radius: 4px;
-  }
-  .heroes li.selected:hover {
-    background-color: #BBD8DC !important;
-    color: white;
-  }
-  .heroes li:hover {
-    color: #607D8B;
-    background-color: #DDD;
-    left: .1em;
-  }
-  .heroes .text {
-    position: relative;
-    top: -3px;
-  }
-  .heroes .badge {
-    display: inline-block;
-    font-size: small;
-    color: white;
-    padding: 0.8em 0.7em 0 0.7em;
-    background-color: #607D8B;
-    line-height: 1em;
-    position: relative;
-    left: -1px;
-    top: -4px;
-    height: 1.8em;
-    margin-right: .8em;
-    border-radius: 4px 0 0 4px;
-  }
-`]
+  moduleId: module.id
+  , styleUrls: ['../heroes.component.css']
   , selector: 'heroes',
-  template: `
-    <h2>My Heroes</h2>
-    <ul class="heroes">
-      <li [class.selected]="hero === selectedHero" 
-          (click)="OnSelectedHero(hero)" 
-          *ngFor="let hero of heroes">
-
-        <span class="badge">{{hero.id}}</span> {{hero.name}}
-      </li>
-    </ul>
-
-    <div *ngIf="selectedHero">
-      <h2>
-        {{selectedHero.name | uppercase}} is my hero
-      </h2>
-      <button (click)="gotoDetail()">View Details</button>
-    </div>
-    `
+  templateUrl: '../heroes.component.html'
   , providers: [HeroService]
 })
 export class HeroesComponent implements OnInit {
-  constructor(private heroService: HeroService) { }
+  constructor(
+    private router: Router,
+    private heroService: HeroService) { }
+  
   title = 'tour of jamon'
   selectedHero: Hero
   heroes: Hero[]
@@ -135,8 +73,13 @@ export class HeroesComponent implements OnInit {
   }
 
   OnSelectedHero(hero: Hero): void {
-    console.log(`selected hero -> ${hero.id}`)
+    console.log(`HeroesComponent::selected hero -> ${hero.id}`)
     this.selectedHero = hero
+  }
+
+  GoToDetail(): void {
+    this.router.navigate(['/detail', this.selectedHero.id])
+    console.log('HeroesComponent::jamon')
   }
 }
 
@@ -167,12 +110,13 @@ export class HeroDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.forEach((params: Params) => {
+      // console.table(`HeroDetailComponent::${params}`)
       console.log(params)
 
       let id = params['id']
       this.heroService.$GetHero(id)
         .then(hero => {
-          console.log(`hero -> ${hero}`)
+          console.log(`HeroDetailComponent::hero -> ${hero}`)
           this.hero = hero
         })
     })
@@ -180,6 +124,7 @@ export class HeroDetailComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+    console.log('HeroDetailComponent::back')
   }
 
 }
