@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { FormsModule } from '@angular/forms'
+import { HttpModule }    from '@angular/http'
 
-// import { AppComponent } from './app.component'
 import { HeroDetailComponent } from './app.component'
 import { DashboardComponent } from './app.component'
 import { NavComponent } from './app.component'
@@ -15,10 +15,10 @@ import { Routing } from './app.routing'
     imports: [
         BrowserModule
         , FormsModule
+        , HttpModule
         , Routing
     ]
     , declarations: [
-        // AppComponent
         NavComponent
         , DashboardComponent
         , HeroesComponent
