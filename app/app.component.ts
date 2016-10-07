@@ -11,7 +11,7 @@ export class Hero {
 
 @Component({
   selector: 'dashboard'
-  // template: '<h3>My Dashboard</h3>'
+  , styleUrls: ['dashboard.component.css'] 
   , templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
@@ -34,11 +34,12 @@ export class DashboardComponent implements OnInit {
 
 @Component({
   selector: 'app-main',
+  styleUrls: ['nav.component.css'],
   template: `
-    <h1>{{title}}</h1>
+     <h1>{{title}}</h1>
     <nav>
-     <a routerLink="/dashboard">Dashboard</a>
-     <a routerLink="/heroes">Heroes</a>
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/heroes" routerLinkActive="active">Heroes</a>
     </nav>
     <router-outlet></router-outlet>
   `
@@ -85,7 +86,8 @@ export class HeroesComponent implements OnInit {
 
 @Component({
   selector: 'hero-detail',
-  templateUrl: 'hero-detail.component.html'
+  styleUrls: ['hero-detail.component.css'],
+  templateUrl: 'hero-detail.component.html' 
   // template: `
   //   <div *ngIf="hero">
   //     <pre>{{hero.id}}</pre>
