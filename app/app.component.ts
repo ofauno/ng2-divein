@@ -1,9 +1,51 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, Input } from '@angular/core'
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Location } from '@angular/common';
+
 import { HeroService } from './data.service'
 
 export class Hero {
   id: number
   name: string
+}
+
+@Component({
+  selector: 'dashboard'
+  // template: '<h3>My Dashboard</h3>'
+  , templateUrl: 'dashboard.component.html'
+})
+export class DashboardComponent implements OnInit {
+  heroes: Hero[] = []
+  constructor(
+    private heroService: HeroService
+    , private router: Router,
+  ) { }
+
+  ngOnInit(): void {
+    this.heroService.$GetHeroes()
+      .then(heroes => this.heroes = heroes.slice(1, 3))
+  }
+
+  gotoDetail(hero: Hero): void {
+    let link = ['/detail', hero.id];
+    this.router.navigate(link);
+  }
+}
+
+
+@Component({
+  selector: 'app-main',
+  template: `
+    <h1>{{title}}</h1>
+    <nav>
+     <a routerLink="/dashboard">Dashboard</a>
+     <a routerLink="/heroes">Heroes</a>
+    </nav>
+    <router-outlet></router-outlet>
+  `
+})
+export class NavComponent {
+  title = 'Tour of Heroes';
 }
 
 @Component({
@@ -56,23 +98,29 @@ export class Hero {
     border-radius: 4px 0 0 4px;
   }
 `]
-  , selector: 'my-fau-app',
+  , selector: 'heroes',
   template: `
-    <hero-detail [hero]="selectedHero"></hero-detail>
-
     <h2>My Heroes</h2>
     <ul class="heroes">
       <li [class.selected]="hero === selectedHero" 
           (click)="OnSelectedHero(hero)" 
           *ngFor="let hero of heroes">
+
         <span class="badge">{{hero.id}}</span> {{hero.name}}
       </li>
     </ul>
+
+    <div *ngIf="selectedHero">
+      <h2>
+        {{selectedHero.name | uppercase}} is my hero
+      </h2>
+      <button (click)="gotoDetail()">View Details</button>
+    </div>
     `
   , providers: [HeroService]
 })
-export class AppComponent implements OnInit{
-  constructor(private heroService: HeroService) {}
+export class HeroesComponent implements OnInit {
+  constructor(private heroService: HeroService) { }
   title = 'tour of jamon'
   selectedHero: Hero
   heroes: Hero[]
@@ -92,20 +140,46 @@ export class AppComponent implements OnInit{
   }
 }
 
-import { Input } from '@angular/core';
 @Component({
   selector: 'hero-detail',
-  template: `
-    <div *ngIf="hero">
-      <pre>{{hero.id}}</pre>
-      <h1>{{title}}</h1><h2>{{hero.name}}</h2>
-      <br>
-      <label>name: </label>
-      <input [(ngModel)]="hero.name" placeholder="name">
-    </div>
-  `
+  templateUrl: 'hero-detail.component.html'
+  // template: `
+  //   <div *ngIf="hero">
+  //     <pre>{{hero.id}}</pre>
+  //     <h1>{{title}}</h1><h2>{{hero.name}}</h2>
+  //     <br>
+  //     <label>name: </label>
+  //     <input [(ngModel)]="hero.name" placeholder="name">
+  //   </div>
+
+  //   <button (click)="goBack()">Back</button>
+  // `
 })
-export class HeroDetailComponent {
+export class HeroDetailComponent implements OnInit {
   @Input()
   hero: Hero;
+
+  constructor(
+    private heroService: HeroService,
+    private route: ActivatedRoute,
+    private location: Location
+  ) { }
+
+  ngOnInit(): void {
+    this.route.params.forEach((params: Params) => {
+      console.log(params)
+
+      let id = params['id']
+      this.heroService.$GetHero(id)
+        .then(hero => {
+          console.log(`hero -> ${hero}`)
+          this.hero = hero
+        })
+    })
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
 }

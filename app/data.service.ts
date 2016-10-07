@@ -11,4 +11,10 @@ export class HeroService {
                 return HEROES
             })
     }
+
+    $GetHero(id: number): Promise<Hero> {
+        console.log(`selected hero -> ${id}`)
+        return this.$GetHeroes()
+            .then(heroes => heroes.find(hero => hero.id === id))
+    }
 }
