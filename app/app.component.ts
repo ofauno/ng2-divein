@@ -110,11 +110,10 @@ export class HeroDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.forEach((params: Params) => {
-      // console.table(`HeroDetailComponent::${params}`)
+      console.log(`HeroDetailComponent::`)
       console.log(params)
 
-      let id = params['id']
-      this.heroService.$GetHero(id)
+      this.heroService.$GetHero(params['id'])
         .then(hero => {
           console.log(`HeroDetailComponent::hero -> ${hero}`)
           this.hero = hero

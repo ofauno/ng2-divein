@@ -12,14 +12,11 @@ export class HeroService {
             })
     }
 
-    $GetHero(id: number): Promise<Hero> {
-        // console.log(`HeroService::selected hero -> ${id}`)
+    $GetHero(id): Promise<Hero> {
+        console.log(`HeroService::selected hero -> ${id}`)
         return this.$GetHeroes()
             .then(heroes => heroes.find(hero => {
-                // console.log(hero); console.log(id)
-                console.log(typeof(hero.id))
-                console.log(typeof(id))
-                return hero.id == id;
+                return hero.id === +id;
             }))
     }
 }
