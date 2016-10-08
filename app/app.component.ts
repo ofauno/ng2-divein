@@ -68,6 +68,17 @@ export class HeroesComponent implements OnInit {
     this.heroService.$GetHeroes()
       .then(heroes => this.heroes = heroes)
   }
+  DeleteHero(hero: Hero): void {
+    console.log(`HeroesComponent::delete ->${hero.name}<-`)
+    this.heroService
+      .delete(hero.id)
+      .then(() => {
+        this.heroes = this.heroes.filter(h => h !== hero)
+        if (this.selectedHero === hero) {
+          this.selectedHero = null
+        }
+      })
+  }
 
   AddHero(heroName: string): void {
     heroName.trim()

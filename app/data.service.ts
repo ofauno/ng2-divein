@@ -18,13 +18,21 @@ export class HeroService {
 
     private headers = new Headers({ 'Content-Type': 'application/json' });
 
+    delete(id: number): Promise<void> {
+        const url = `${this.heroesUrl}/${id}`
+        return this.http.delete(url, { headers: this.headers })
+            .toPromise()
+            .then(() => null)
+            .catch(this.handleError)
+    }
+
     create(heroName: string): Promise<Hero> {
         console.log(`HeroService:: ->${heroName}<- will be created`)
         return this.http
             .post(this.heroesUrl, JSON.stringify({ name: heroName }), { headers: this.headers })
             .toPromise()
             .then(res => res.json())
-            .catch(this.handleError);
+            .catch(this.handleError)
     }
 
     update(hero: Hero): Promise<Hero> {
