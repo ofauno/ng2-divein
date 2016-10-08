@@ -11,7 +11,7 @@ export class Hero {
 
 @Component({
   selector: 'dashboard'
-  , styleUrls: ['dashboard.component.css'] 
+  , styleUrls: ['dashboard.component.css']
   , templateUrl: 'dashboard.component.html'
 })
 export class DashboardComponent implements OnInit {
@@ -59,18 +59,25 @@ export class HeroesComponent implements OnInit {
   constructor(
     private router: Router,
     private heroService: HeroService) { }
-  
+
   title = 'tour of jamon'
   selectedHero: Hero
   heroes: Hero[]
-  hero: Hero = {
-    id: 1000,
-    name: 'don jamon'
-  }
 
   ngOnInit(): void {
     this.heroService.$GetHeroes()
       .then(heroes => this.heroes = heroes)
+  }
+
+  AddHero(heroName: string): void {
+    heroName.trim()
+    if (!heroName) { return }
+
+    this.heroService.create(heroName)
+      .then(hero => {
+        this.heroes.push(hero);
+        this.selectedHero = null;
+      });
   }
 
   OnSelectedHero(hero: Hero): void {
@@ -87,7 +94,7 @@ export class HeroesComponent implements OnInit {
 @Component({
   selector: 'hero-detail',
   styleUrls: ['hero-detail.component.css'],
-  templateUrl: 'hero-detail.component.html' 
+  templateUrl: 'hero-detail.component.html'
   // template: `
   //   <div *ngIf="hero">
   //     <pre>{{hero.id}}</pre>

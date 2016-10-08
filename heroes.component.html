@@ -1,3 +1,12 @@
+<div>
+    <pre>selectedHero: {{ selectedHero | json }}</pre>
+    <h2>Add new Hero</h2>
+    <label>Hero name:</label> <input #heroName />
+    <button (click)="AddHero(heroName.value); heroName.value=''">
+    Add
+  </button>
+</div>
+
 <h2>My Heroes LOL</h2>
 <ul class="heroes">
     <li [class.selected]="hero === selectedHero" (click)="OnSelectedHero(hero)" *ngFor="let hero of heroes">

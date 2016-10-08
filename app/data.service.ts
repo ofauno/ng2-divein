@@ -7,7 +7,7 @@ import { Hero } from './app.component'
 
 @Injectable()
 export class HeroService {
-    private heroesUrl = 'http://192.168.99.100:3000/fakes';  // URL to web api
+    private heroesUrl = 'http://dockerhost:3000/fakes';  // URL to web api
 
     constructor(private http: Http) { }
 
@@ -18,6 +18,15 @@ export class HeroService {
 
     private headers = new Headers({ 'Content-Type': 'application/json' });
 
+    create(heroName: string): Promise<Hero> {
+        console.log(`HeroService:: ->${heroName}<- will be created`)
+        return this.http
+            .post(this.heroesUrl, JSON.stringify({ name: heroName }), { headers: this.headers })
+            .toPromise()
+            .then(res => res.json())
+            .catch(this.handleError);
+    }
+
     update(hero: Hero): Promise<Hero> {
         const url = `${this.heroesUrl}/${hero.id}`
 
@@ -27,7 +36,7 @@ export class HeroService {
             .then(() => hero)
             .catch(this.handleError);
     }
-    
+
     $GetHeroes(): Promise<Hero[]> {
         // return new Promise<Hero[]>(heroes => setTimeout(heroes, 3000))
         //     .then(() => {
