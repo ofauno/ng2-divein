@@ -1,0 +1,7 @@
+
+$ brew update
+$ brew cask install java
+fish-shell: set -x JAVA_HOME (eval /usr/libexec/java_home)
+$ brew install android-sdk
+fish-shell: set -x ANDROID_HOME /Users/fauno/homebrew/opt/android-sdk
+$ android update sdk --filter tools,platform-tools,android-23,build-tools-23.0.3,extra-android-m2repository,extra-google-m2repository,extra-android-support --all --no-ui
