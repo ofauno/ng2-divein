@@ -1,9 +1,25 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs';
 
 import { Hero } from './app.component'
 // import { HEROES } from './mock.heroes'
+
+@Injectable()
+export class HeroSearchService {
+    constructor(private http: Http) { }
+
+    Search(term: string): Observable<Hero[]> {
+        return this.http
+            .get(`http://dockerhost:3000/fakes/?name=${term}`)
+            .map((r: Response) => {
+                console.log(`HeroSearchService::reponse`)
+                console.table(r)
+                return r.json() as Hero[]
+            });
+    }
+}
 
 @Injectable()
 export class HeroService {
@@ -42,7 +58,7 @@ export class HeroService {
             .put(url, JSON.stringify(hero), { headers: this.headers })
             .toPromise()
             .then(() => hero)
-            .catch(this.handleError);
+            .catch(this.handleError)
     }
 
     $GetHeroes(): Promise<Hero[]> {
@@ -61,7 +77,7 @@ export class HeroService {
         console.log(`HeroService::selected hero -> ${id}`)
         return this.$GetHeroes()
             .then(heroes => heroes.find(hero => {
-                return hero.id === +id;
+                return hero.id === +id
             }))
     }
 }

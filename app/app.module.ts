@@ -6,7 +6,7 @@ import { HttpModule }    from '@angular/http'
 import { HeroDetailComponent } from './app.component'
 import { DashboardComponent } from './app.component'
 import { NavComponent } from './app.component'
-import { HeroesComponent } from './app.component'
+import { HeroesComponent, HeroSearchComponent } from './app.component'
 import { HeroService } from './data.service'
 
 import { Routing } from './app.routing'
@@ -23,6 +23,7 @@ import { Routing } from './app.routing'
         , DashboardComponent
         , HeroesComponent
         , HeroDetailComponent
+        , HeroSearchComponent
     ]
     , providers: [
         HeroService

@@ -1,12 +1,70 @@
 import { Component, OnInit, Input } from '@angular/core'
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { ActivatedRoute, Params, Router } from '@angular/router'
+import { Location } from '@angular/common'
+import { Observable } from 'rxjs/Observable'
+import { Subject } from 'rxjs/Subject'
 
-import { HeroService } from './data.service'
+// Observable class extensions
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
+
+// Observable operators
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+
+import { HeroService, HeroSearchService } from './data.service'
 
 export class Hero {
   id: number
   name: string
+}
+
+@Component({
+  // moduleId: module.id,
+  selector: 'hero-search',
+  templateUrl: 'hero-search.component.html',
+  styleUrls: ['hero-search.component.css'],
+  providers: [HeroSearchService]
+})
+export class HeroSearchComponent implements OnInit {
+  heroes: Observable<Hero[]>
+  private searchTerms = new Subject<string>()
+
+  constructor(
+    private heroSearch: HeroSearchService,
+    private router: Router) { }
+  // Push a search term into the observable stream.
+  SearchHero(heroTyped: string): void {
+    this.searchTerms.next(heroTyped)
+  }
+
+  ngOnInit(): void {
+    console.log(`HeroSearchComponent::init`)
+    console.log(this.heroes)
+    this.heroes = this.searchTerms
+      .debounceTime(500)        // wait for 300ms pause in events
+      .distinctUntilChanged()   // ignore if next search term is same as previous
+      .switchMap(term => term   // switch to new observable each time
+        // return the http search observable
+        ? this.heroSearch.Search(term)
+        // or the observable of empty heroes if no search term
+        : Observable.of<Hero[]>([]))
+      .catch(error => {
+        // TODO: real error handling
+        console.log(error);
+        return Observable.of<Hero[]>([])
+      });
+  }
+
+  GoToHeroDetail(hero: Hero): void {
+    let link = ['/detail', hero.id]
+    this.router.navigate(link)
+  }
 }
 
 @Component({
@@ -36,6 +94,8 @@ export class DashboardComponent implements OnInit {
   selector: 'app-main',
   styleUrls: ['nav.component.css'],
   template: `
+  <hero-search></hero-search>
+
      <h1>{{title}}</h1>
     <nav>
       <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
