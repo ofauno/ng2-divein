@@ -12,6 +12,28 @@ import { Config } from "../config"
 export class UserService {
     constructor(private http: Http) { }
 
+    login(user: User) {
+        console.log(user)
+        let headers = new Headers();
+        // headers.append("Content-Type", "application/json")
+
+        return this.http.post(
+            "http://192.168.99.100:3000/auth_user",
+            JSON.stringify({
+                username: 'jamon@jamon.com',
+                password: 'jamonjamon',
+                // grant_type: "password"
+            }),
+            { headers: headers }
+        )
+            // .map(response => response.json())
+            .do(data => {
+                console.log(data)
+                // Config.token = data.Result.access_token;
+            })
+            .catch(this.handleErrors);
+    }
+
     register(user: User) {
         let headers = new Headers();
         headers.append("Content-Type", "application/json");

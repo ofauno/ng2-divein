@@ -23,4 +23,4 @@ import { Routes, Views } from "./app.routing"
     AppComponent
   ]
 })
-export class AppModule {}
+export class AppModule { }
