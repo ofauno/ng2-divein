@@ -1,24 +1,60 @@
-import { Component } from "@angular/core";
+import { Component } from "@angular/core"
+import { User } from "./shared/user/user"
+import { UserService } from "./shared/user/user.service"
+
+@Component({
+  selector: "list-view",
+  templateUrl: "pages/list/list.html",
+  styleUrls: ["pages/list/list-common.css", "pages/list/list.css"]
+})
+export class ListView { }
+
 
 @Component({
   moduleId: module.id,
-  selector: "my-mobile-app",
+  providers: [UserService],
+  selector: "login-view",
   styleUrls: ['pages/login/login-common.css', 'pages/login/login.css'],
-  template: `
-  <StackLayout>
-    <Image src="res://logo_login" stretch="none" horizontalAlignment="center"></Image>
-    <TextField hint="Email Address" keyboardType="email" [(ngModel)]="email"
-  autocorrect="false" autocapitalizationType="none"></TextField>
-    <TextField hint="Password" secure="true"></TextField>
-
-    <Button class="submit-button" text="Sign in" (tap)="Submit()"></Button>
-    <Button text="Sign up for Groceries"></Button>
-  </StackLayout>
-  `
+  templateUrl: "pages/login/login.html"
 })
-export class AppComponent {
-  email = "nativescriptrocks@telerik.com";
+export class LoginView {
+  user: User
+  Email = "nativescriptrocks@telerik.com"
+  IsLoggingIn = true
+
+  constructor(private userService: UserService) {
+    this.user = new User();
+  }
+
   Submit() {
-    alert(`hello::${this.email}`);
+    if (this.IsLoggingIn) {
+      this.login()
+    } else {
+      this.signUp()
+    }
+    // alert(`hello::${this.user.Email}`)
+  }
+
+  login() {
+    // TODO: Define
+  }
+  signUp() {
+    this.userService.register(this.user)
+      .subscribe(() => {
+        alert("Your account was successfully created.")
+        this.ToggleDisplay();
+      }, () => {
+        alert("Unfortunately we were unable to create your account.")
+      })
+  }
+
+  ToggleDisplay() {
+    this.IsLoggingIn = !this.IsLoggingIn;
   }
 }
+
+@Component({
+  selector: "main",
+  template: "<page-router-outlet></page-router-outlet>"
+})
+export class AppComponent { }
