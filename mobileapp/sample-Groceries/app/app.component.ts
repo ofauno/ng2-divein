@@ -29,7 +29,7 @@ export class LoginView {
 
   Submit() {
     if (this.IsLoggingIn) {
-      this.login()
+    this.login()
     } else {
       this.signUp()
     }
@@ -38,18 +38,17 @@ export class LoginView {
 
   login() {
     this.userService.login(this.user)
-      .subscribe(() => this.router.navigate(["/list"]),
-      (error) => alert("Unfortunately we could not find your account."))
+      .then(data => {
+        console.log(data)
+        this.router.navigate(["/list-view"])
+      })
+
+    // .subscribe(() => this.router.navigate(["/list-view"]),
+    // (error) => alert("Unfortunately we could not find your account."))
   }
 
   signUp() {
-    this.userService.register(this.user)
-      .subscribe(() => {
-        alert("Your account was successfully created.")
-        this.ToggleDisplay();
-      }, () => {
-        alert("Unfortunately we were unable to create your account.")
-      })
+    alert(this.userService.register(this.user))
   }
 
   ToggleDisplay() {

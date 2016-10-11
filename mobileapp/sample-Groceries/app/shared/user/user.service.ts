@@ -5,6 +5,8 @@ import { Observable } from "rxjs/Rx"
 import "rxjs/add/operator/do"
 import "rxjs/add/operator/map"
 
+import 'rxjs/add/operator/toPromise'
+
 import { User } from "./user"
 import { Config } from "../config"
 
@@ -13,14 +15,17 @@ export class UserService {
     constructor(private http: Http) { }
 
     login(user: User) {
-        console.log(user)
         let headers = new Headers();
-        // headers.append("Content-Type", "application/json")
-
+        headers.append("Content-Type", "application/json")
+        let body = {
+            email: 'jamon@jamon.com',
+            password: 'jamonjamon'
+        }
+        /** 
         return this.http.post(
-            "http://192.168.99.100:3000/auth_user",
+            "http://api-tracker.noads.me/auth_user",
             JSON.stringify({
-                username: 'jamon@jamon.com',
+                email: 'jamon@jamon.com',
                 password: 'jamonjamon',
                 // grant_type: "password"
             }),
@@ -28,29 +33,30 @@ export class UserService {
         )
             // .map(response => response.json())
             .do(data => {
+                // console.log('api-tracker: ')
                 console.log(data)
                 // Config.token = data.Result.access_token;
+                // Config.token = data.user;
             })
             .catch(this.handleErrors);
+            */
+
+        return this.http.request("http://api-tracker.noads.me/auth_user",
+            { method: "POST", headers: headers, body: body })
+            .toPromise()
+            .then(resp => resp.json())
+            .catch(err => console.log(err))
     }
 
     register(user: User) {
         let headers = new Headers();
         headers.append("Content-Type", "application/json");
 
-        return this.http.post(
-            Config.apiUrl + "Users",
-            JSON.stringify({
-                Username: user.Email,
-                Email: user.Email,
-                Password: user.Password
-            }),
-            { headers: headers })
-            .catch(this.handleErrors);
+        return "todo: registrer"
     }
 
     handleErrors(error: Response) {
-        console.log(JSON.stringify(error.json()));
-        return Observable.throw(error);
+        console.log(JSON.stringify(error))
+        return Observable.throw(error)
     }
 }

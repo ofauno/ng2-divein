@@ -1,4 +1,5 @@
 <StackLayout>
+    {{ IsLoggingIn | json }}
     <Image src="res://logo_login" stretch="none" horizontalAlignment="center"></Image>
     <TextField hint="Email Address" keyboardType="email" [(ngModel)]="user.Email" autocorrect="false" autocapitalizationType="none"></TextField>
     <TextField hint="Password" secure="true" [(ngModel)]="user.Password"></TextField>
